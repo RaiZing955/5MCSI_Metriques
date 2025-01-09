@@ -35,35 +35,6 @@ def mongraphique():
 def histogramme():
     return render_template("histogramme.html")
 
-
-@app.route('/commit/')
-def commit():
-    try:
-        # Appeler l'API GitHub pour récupérer les commits
-        response = urlopen('https://api.github.com/repos/OpenRSI/5MCSI_Metriques/commits')
-        raw_content = response.read()
-        json_content = json.loads(raw_content.decode('utf-8'))
-
-        # Construire une liste avec les informations nécessaires
-        results = []
-        for commit in json_content:
-            commit_value = commit.get('sha')  # Identifiant du commit
-            author_value = commit.get('commit', {}).get('author', {}).get('name')  # Nom de l'auteur
-            date_value = commit.get('commit', {}).get('author', {}).get('date')  # Date du commit
-
-            if commit_value and author_value and date_value:
-                results.append({
-                    'commit': commit_value,
-                    'auteur': author_value,
-                    'date': date_value
-                })
-
-        return jsonify(results=results)
-    except Exception as e:
-        # Gestion des erreurs en cas de problème avec l'API ou autre
-        return jsonify(error=str(e)), 500
-
-
   
 if __name__ == "__main__":
   app.run(debug=True)
