@@ -34,6 +34,18 @@ def mongraphique():
 @app.route("/histogramme/")
 def histogramme():
     return render_template("histogramme.html")
+
+@app.route('/commit/')
+def commit():
+    response = urlopen('https://api.github.com/repos/OpenRSI/5MCSI_Metriques/commits')
+    raw_content = response.read()
+    json_content = json.loads(raw_content.decode('utf-8'))
+    results = []
+    for list_element in json_content.get('list', []):
+        dt_value = list_element.get('dt')
+        temp_day_value = list_element.get('main', {}).get('temp') 
+        results.append({'commit': commit_value, 'auteur': author_value, 'date': date_value})
+    return jsonify(results=results)
   
 if __name__ == "__main__":
   app.run(debug=True)
