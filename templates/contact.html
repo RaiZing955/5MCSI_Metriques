@@ -1,5 +1,11 @@
+from flask import Flask, render_template_string, request
+
+app = Flask(__name__)
+
+# HTML pour la page de contact
+contact_html = """
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,91 +15,84 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             background-color: #f4f4f9;
-            color: #333;
         }
-
         .container {
-            max-width: 800px;
-            margin: 50px auto;
+            background: #ffffff;
             padding: 20px;
-            background: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
         }
-
         h1 {
             text-align: center;
-            color: #007BFF;
+            color: #333;
         }
-
         form {
             display: flex;
             flex-direction: column;
-            gap: 15px;
         }
-
-        label {
-            font-weight: bold;
-        }
-
-        input, textarea, button {
-            width: 100%;
+        input, textarea {
+            margin-bottom: 15px;
             padding: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
         }
-
-        input:focus, textarea:focus {
-            border-color: #007BFF;
-            outline: none;
-        }
-
         button {
-            background-color: #007BFF;
+            padding: 10px;
+            background-color: #5cb85c;
             color: white;
             border: none;
+            border-radius: 5px;
+            font-size: 16px;
             cursor: pointer;
-            font-size: 18px;
-            transition: background-color 0.3s ease;
         }
-
         button:hover {
-            background-color: #0056b3;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            color: #777;
+            background-color: #4cae4c;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Contactez-nous</h1>
+        <form action="/contact/" method="post">
+            <label for="prenom">Prénom :</label>
+            <input type="text" id="prenom" name="prenom" required>
 
-<div class="container">
-    <h1>Contactez-nous</h1>
-    <form action="#" method="post">
-        <label for="name">Nom :</label>
-        <input type="text" id="name" name="name" placeholder="Votre nom" required>
+            <label for="nom">Nom :</label>
+            <input type="text" id="nom" name="nom" required>
 
-        <label for="email">Email :</label>
-        <input type="email" id="email" name="email" placeholder="Votre email" required>
+            <label for="message">Message :</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
 
-        <label for="subject">Sujet :</label>
-        <input type="text" id="subject" name="subject" placeholder="Sujet de votre message" required>
-
-        <label for="message">Message :</label>
-        <textarea id="message" name="message" rows="5" placeholder="Votre message" required></textarea>
-
-        <button type="submit">Envoyer</button>
-    </form>
-</div>
-
-<div class="footer">
-    &copy; 2025 Votre Entreprise. Tous droits réservés.
-</div>
-
+            <button type="submit">Envoyer</button>
+        </form>
+    </div>
 </body>
 </html>
+"""
+
+@app.route("/contact/", methods=["GET", "POST"])
+def contact():
+    if request.method == "POST":
+        prenom = request.form.get("prenom")
+        nom = request.form.get("nom")
+        message = request.form.get("message")
+        
+        # Vous pouvez gérer le message ici (par exemple, sauvegarde ou envoi par email)
+        print(f"Message reçu de {prenom} {nom}: {message}")
+        
+        # Retourner une réponse de remerciement
+        return f"<h1>Merci {prenom} pour votre message !</h1>"
+
+    # Afficher le formulaire de contact
+    return render_template_string(contact_html)
+
+if __name__ == "__main__":
+    app.run(debug=True)
